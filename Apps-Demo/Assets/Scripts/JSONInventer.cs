@@ -14,18 +14,17 @@ public class JSONInventer
     Puzzle puzzleJSON;
     public JSONInventer()
     {
+        jsonString = File.ReadAllText(Application.dataPath + "/Resources/Puzzle.json");
+        puzzleJSON = JsonUtility.FromJson<Puzzle>(jsonString);
         InitializeVariablesFromJSON(puzzleJSON);
     }
 
     private void InitializeVariablesFromJSON(Puzzle puzzleJSON)
     {
-        jsonString = File.ReadAllText(Application.dataPath + "/Resources/Puzzle.json");
-        puzzleJSON = JsonUtility.FromJson<Puzzle>(jsonString);
-
         topic = puzzleJSON.topic;
         words = puzzleJSON.words;
         rewardCoin = puzzleJSON.rewardCoin;
-        Board board = puzzleJSON.board;
+        board = puzzleJSON.board;
     }
 
     public string GetTopic()
