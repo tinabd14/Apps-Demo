@@ -9,8 +9,6 @@ public class Cell : MonoBehaviour
     float yScale;
     float xPos;
     float yPos;
-    int rowIndex;
-    int colIndex;
 
     JSONInventer myJSONInventer;
     GameObject grid;
@@ -30,16 +28,18 @@ public class Cell : MonoBehaviour
 
     public void SetPosition(int row, int col)
     {
-        float xStart = (col * xScale) + (-1 * grid.transform.localScale.x / 2) + grid.transform.position.x;
+        float xStart = (col * xScale) + (-1 * grid.GetComponent<RectTransform>().sizeDelta.x / 2);
         float xFinish = xStart + xScale;
         xPos = (xStart + xFinish) / 2;
 
-        float yStart = (row * yScale) + (-1 * grid.transform.localScale.y / 2) + grid.transform.position.y;
+        float yStart = (row * yScale) + (-1 * grid.GetComponent<RectTransform>().sizeDelta.y / 2);
         float yFinish = yStart + yScale;
         yPos = (yStart + yFinish) / 2;
 
         Vector2 pos = new Vector2(xPos, yPos);
-        gameObject.transform.position = pos;
+        gameObject.GetComponent<RectTransform>().localPosition = pos;
+        Debug.Log(gameObject.GetComponent<RectTransform>().localPosition);
+
     }
 
     private void SetScale(GameObject grid)
@@ -47,22 +47,21 @@ public class Cell : MonoBehaviour
         float boardRow = myJSONInventer.GetBoard().boardRow;
         float boardCol = myJSONInventer.GetBoard().boardCol;
 
-        Vector2 gridScale = grid.transform.localScale;
+        Vector2 gridScale = new Vector2(grid.GetComponent<RectTransform>().sizeDelta.x, grid.GetComponent<RectTransform>().sizeDelta.y);
         xScale = gridScale.x / boardCol;
         yScale = gridScale.y / boardRow;
-        
-        gameObject.transform.localScale = new Vector2(xScale, yScale);
+        gameObject.GetComponent<RectTransform>().sizeDelta = new Vector2(xScale, yScale);
     }
 
     private void InitializeJSONInventer()
     {
-        if (Gameplay.myJSONinventer == null)
+        if (Gameplay.myJSONInventer == null)
         {
             myJSONInventer = new JSONInventer();
         }
         else
         {
-            myJSONInventer = Gameplay.myJSONinventer;
+            myJSONInventer = Gameplay.myJSONInventer;
         }
     }
 }

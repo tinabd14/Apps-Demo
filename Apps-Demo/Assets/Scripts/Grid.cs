@@ -10,9 +10,10 @@ public class Grid : MonoBehaviour
     [SerializeField] GameObject cellPrefab;
     [SerializeField] GameObject boxPrefab;
     private List<GameObject> cells;
-    private  List<Sprite> letterAssets;
+    private List<Sprite> letterAssets;
 
     JSONInventer myJSONInventer;
+    public static List<GameObject> boxes = new List<GameObject>();
 
     void Start()
     {
@@ -32,13 +33,13 @@ public class Grid : MonoBehaviour
 
     private void InitializeJSONInventer()
     {
-        if (Gameplay.myJSONinventer == null)
+        if (Gameplay.myJSONInventer == null)
         {
             myJSONInventer = new JSONInventer();
         }
         else
         {
-            myJSONInventer = Gameplay.myJSONinventer;
+            myJSONInventer = Gameplay.myJSONInventer;
         }
     }
 
@@ -53,17 +54,18 @@ public class Grid : MonoBehaviour
                 {
                     if (i == myJSONInventer.GetBoard().letters[k].rowIndex && j == myJSONInventer.GetBoard().letters[k].colIndex)
                     {
-                        GameObject cell = Instantiate(cellPrefab);
+                        GameObject cell = Instantiate(cellPrefab,transform);
                         cell.GetComponent<Cell>().Initialize();
                         cell.GetComponent<Cell>().SetPosition(i, j);
+                        //cell.transform.SetParent(GameObject.Find("Grid").transform);
                         
                         GameObject box = Instantiate(boxPrefab, cell.transform);
-
                         box.GetComponent<Box>().SetLetter(GetAssetOfLetter(myJSONInventer.GetBoard().letters[k].letter));
-                        box.transform.localScale = cell.transform.localScale;
-                        box.transform.parent = cell.transform;
+                        box.GetComponent<RectTransform>().sizeDelta = cell.GetComponent<RectTransform>().sizeDelta;
+                        box.transform.SetParent(cell.transform);
                         
                         cells.Add(cell);
+                        boxes.Add(box);
                     }
                 }
             }

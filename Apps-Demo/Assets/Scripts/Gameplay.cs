@@ -2,75 +2,51 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public class Gameplay : MonoBehaviour
 {
-    public static JSONInventer myJSONinventer;
-    private GridLayoutGroup grid;
-    public GameObject box;
-    public static List<Sprite> letterAssets = new List<Sprite>();
-    // Start is called before the first frame update
-    void Start()
+    public static JSONInventer myJSONInventer;
+    
+    private List<GameObject> selectedBoxes = new List<GameObject>();
+    List<GameObject> allBoxes;
+
+    private void Start()
     {
-        myJSONinventer = new JSONInventer();
-        GetAllLettersFromAssets();
-        PrepareGrid();
+        myJSONInventer = new JSONInventer();
+        allBoxes = Grid.boxes;
     }
 
-
-    private void PrepareGrid()
+    private void Update()
     {
-        /*
-        int boardRow = myJSONinventer.GetBoard().boardRow;
-        int boardCol = myJSONinventer.GetBoard().boardCol;
-
-        for(int i = 0; i < boardRow * boardCol; i++)
+        while(Input.touches.Length > 0)
         {
-            string letter = FindLetter(i);
-            int rowIndex = FindRowIndex(i);
-            int colIndex = FindColIndex(i);
-
-            box.GetComponent<Box>().ReScaleBox(boardRow, boardCol);
-            box.GetComponent<Box>().SetLetter(GetAssetOfLetter(letter));
-            box.GetComponent<Box>().SetPosition(rowIndex, colIndex);
-            Instantiate(box, gameObject.transform);
+            CheckIfItIsAWord();
+            Debug.Log("TT: " + Input.touches);
         }
-        */
     }
 
-    private int FindColIndex(int i)
+    private void CheckIfItIsAWord()
     {
-        return myJSONinventer.GetBoard().letters[i].colIndex;
+        GetSelectedBoxes();
+        CheckSelectedBoxes();
     }
 
-    private int FindRowIndex(int i)
+    private void CheckSelectedBoxes()
     {
-        return myJSONinventer.GetBoard().letters[i].rowIndex;
+        Debug.Log(selectedBoxes.Count);
     }
 
-    private string FindLetter(int i)
+    private void GetSelectedBoxes()
     {
-        return myJSONinventer.GetBoard().letters[i].letter;
-    }
-
-    private List<Sprite> GetAllLettersFromAssets()
-    {
-        letterAssets.Clear();
-        var sprites = Resources.LoadAll("alfabe", typeof(Sprite));
-        foreach (var sprite in sprites)
-            letterAssets.Add(sprite as Sprite);
-        return letterAssets;
-    }
-
-    private Sprite GetAssetOfLetter(string letter)
-    {
-        for(int i = 0; i < letterAssets.Count; i++)
+        selectedBoxes.Clear();
+        for (int i = 0; i < allBoxes.Count; i++)
         {
-            if (letterAssets[i].name.Equals(letter))
-                return letterAssets[i];
+            if (allBoxes[i].GetComponent<Box>().GetTouched())
+            {
+                selectedBoxes.Add(allBoxes[i]);
+            }
         }
-        return null;
     }
-
 }
