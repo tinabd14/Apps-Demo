@@ -165,7 +165,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cellPrefab: {fileID: 6156994273271204702, guid: 5ac164199890f3f44a849d587f899d9b,
     type: 3}
-  boxPrefab: {fileID: 4405004396344243468, guid: 5947a86018fb198429a2b36a0deeca41,
+  boxPrefab: {fileID: 8781164514342479232, guid: 5947a86018fb198429a2b36a0deeca41,
     type: 3}
 --- !u!1 &519420028
 GameObject:

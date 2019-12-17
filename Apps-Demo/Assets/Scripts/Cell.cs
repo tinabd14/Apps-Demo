@@ -39,7 +39,6 @@ public class Cell : MonoBehaviour
         yPos = (yStart + yFinish) / 2;
 
         Vector2 pos = new Vector2(xPos, yPos);
-        Debug.Log(pos);
         gameObject.transform.position = pos;
     }
 

@@ -27,6 +27,7 @@ public class Grid : MonoBehaviour
         colCount = myJSONInventer.GetBoard().boardCol;
         cells = new List<GameObject>();
         letterAssets = new List<Sprite>();
+        GetAllLettersFromAssets();
     }
 
     private void InitializeJSONInventer()
@@ -55,12 +56,13 @@ public class Grid : MonoBehaviour
                         GameObject cell = Instantiate(cellPrefab);
                         cell.GetComponent<Cell>().Initialize();
                         cell.GetComponent<Cell>().SetPosition(i, j);
-                        /*
-                        GameObject box = Instantiate(boxPrefab);
+                        
+                        GameObject box = Instantiate(boxPrefab, cell.transform);
+
                         box.GetComponent<Box>().SetLetter(GetAssetOfLetter(myJSONInventer.GetBoard().letters[k].letter));
                         box.transform.localScale = cell.transform.localScale;
                         box.transform.parent = cell.transform;
-                        */
+                        
                         cells.Add(cell);
                     }
                 }
@@ -81,9 +83,25 @@ public class Grid : MonoBehaviour
     {
         for (int i = 0; i < letterAssets.Count; i++)
         {
-            if (letterAssets[i].name.Equals(letter))
+            string assetName = letterAssets[i].name;
+            if(assetName.Equals("Ş") && letter.Equals("Ş"))
                 return letterAssets[i];
+            if(assetName.Equals("İ") && letter.Equals("İ"))
+                return letterAssets[i];
+            if(assetName.Equals("Ç") && letter.Equals("Ç"))
+                return letterAssets[i];
+            if(assetName.Equals("ğ") && letter.Equals("Ğ"))
+                return letterAssets[i];
+            if (assetName.Equals("Ö") && letter.Equals("Ö"))
+                return letterAssets[i];
+            if (assetName.Equals("Ü") && letter.Equals("Ü"))
+                return letterAssets[i];
+            if (assetName.Equals(letter))
+            {
+                return letterAssets[i];
+            }
         }
         return null;
     }
+    
 }
