@@ -2,10 +2,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Gameplay : MonoBehaviour
 {
-    JSONInventer myJSONinventer;
+    public static JSONInventer myJSONinventer;
+    private GridLayoutGroup grid;
+    public GameObject box;
     public static List<Sprite> letterAssets = new List<Sprite>();
     // Start is called before the first frame update
     void Start()
@@ -18,6 +21,7 @@ public class Gameplay : MonoBehaviour
 
     private void PrepareGrid()
     {
+        /*
         int boardRow = myJSONinventer.GetBoard().boardRow;
         int boardCol = myJSONinventer.GetBoard().boardCol;
 
@@ -27,11 +31,12 @@ public class Gameplay : MonoBehaviour
             int rowIndex = FindRowIndex(i);
             int colIndex = FindColIndex(i);
 
-            GameObject box = GameObject.Find("Box");
             box.GetComponent<Box>().ReScaleBox(boardRow, boardCol);
             box.GetComponent<Box>().SetLetter(GetAssetOfLetter(letter));
             box.GetComponent<Box>().SetPosition(rowIndex, colIndex);
+            Instantiate(box, gameObject.transform);
         }
+        */
     }
 
     private int FindColIndex(int i)
