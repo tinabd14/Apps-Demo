@@ -10,8 +10,15 @@ public class Cell : MonoBehaviour
     float xPos;
     float yPos;
 
+    int rowIndex;
+    int colIndex;
+    Vector2 rowcol;
+
+
     JSONInventer myJSONInventer;
     GameObject grid;
+    List<GameObject> neighbours = new List<GameObject>();
+
 
     // Start is called before the first frame update
     public void Initialize()
@@ -28,6 +35,10 @@ public class Cell : MonoBehaviour
 
     public void SetPosition(int row, int col)
     {
+        rowIndex = row;
+        colIndex = col;
+        rowcol = new Vector2(rowIndex, colIndex);
+
         float xStart = (col * xScale) + (-1 * grid.GetComponent<RectTransform>().sizeDelta.x / 2);
         float xFinish = xStart + xScale;
         xPos = (xStart + xFinish) / 2;
@@ -38,8 +49,6 @@ public class Cell : MonoBehaviour
 
         Vector2 pos = new Vector2(xPos, yPos);
         gameObject.GetComponent<RectTransform>().localPosition = pos;
-        Debug.Log(gameObject.GetComponent<RectTransform>().localPosition);
-
     }
 
     private void SetScale(GameObject grid)
@@ -63,5 +72,30 @@ public class Cell : MonoBehaviour
         {
             myJSONInventer = Gameplay.myJSONInventer;
         }
+    }
+
+    public Vector2 GetRowCol()
+    {
+        return rowcol;
+    }
+
+    public int GetRowIndex()
+    {
+        return rowIndex;
+    }
+    public int GetColIndex()
+    {
+        return colIndex;
+    }
+
+    public List<GameObject> GetNeighbourCells()
+    {
+        return neighbours;
+    }
+
+    public void SetNeighbourCells(List<GameObject> neighbours)
+    {
+        this.neighbours.Clear();
+        this.neighbours = neighbours;
     }
 }

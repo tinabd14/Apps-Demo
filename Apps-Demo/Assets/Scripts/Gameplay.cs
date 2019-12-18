@@ -20,11 +20,7 @@ public class Gameplay : MonoBehaviour
 
     private void Update()
     {
-        while(Input.touches.Length > 0)
-        {
-            CheckIfItIsAWord();
-            Debug.Log("TT: " + Input.touches);
-        }
+           // CheckIfItIsAWord();
     }
 
     private void CheckIfItIsAWord()
@@ -35,7 +31,23 @@ public class Gameplay : MonoBehaviour
 
     private void CheckSelectedBoxes()
     {
-        Debug.Log(selectedBoxes.Count);
+        if (Input.touchCount == 1)
+        {
+            Touch touch = Input.GetTouch(0);
+            if (touch.phase == TouchPhase.Began)
+            {
+                //if(touch.position)
+            }
+            else if (touch.phase == TouchPhase.Moved)
+            {
+
+            }
+            else if (touch.phase == TouchPhase.Ended)
+            {
+
+            }
+        }
+        
     }
 
     private void GetSelectedBoxes()

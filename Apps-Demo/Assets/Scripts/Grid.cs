@@ -7,19 +7,23 @@ public class Grid : MonoBehaviour
 {
     private int rowCount;
     private int colCount;
+
     [SerializeField] GameObject cellPrefab;
     [SerializeField] GameObject boxPrefab;
-    private List<GameObject> cells;
     private List<Sprite> letterAssets;
 
     JSONInventer myJSONInventer;
     public static List<GameObject> boxes = new List<GameObject>();
+    public static List<GameObject> cells = new List<GameObject>();
+
 
     void Start()
     {
         InitializeJSONInventer();
         InitializeGridProperties();
         FillWithCells();
+
+        foo();
     }
 
     private void InitializeGridProperties()
@@ -29,6 +33,7 @@ public class Grid : MonoBehaviour
         cells = new List<GameObject>();
         letterAssets = new List<Sprite>();
         GetAllLettersFromAssets();
+
     }
 
     private void InitializeJSONInventer()
@@ -105,5 +110,54 @@ public class Grid : MonoBehaviour
         }
         return null;
     }
+
     
+    private void FindNeighbourCells(Cell cell)
+    {
+        int upperNeighbourRow = cell.GetRowIndex() + 1;
+        int upperNeighbourCol = cell.GetColIndex();
+        Vector2 upper = new Vector2(upperNeighbourRow, upperNeighbourCol);
+
+        int bottomNeighbourRow = cell.GetRowIndex() - 1;
+        int bottomNeighbourCol = cell.GetColIndex();
+        Vector2 bottom = new Vector2(bottomNeighbourRow, bottomNeighbourCol);
+
+        int leftNeighbourRow = cell.GetRowIndex();
+        int leftNeighbourCol = cell.GetColIndex() - 1;
+        Vector2 left = new Vector2(leftNeighbourRow, leftNeighbourCol);
+
+        int rightNeighbourRow = cell.GetRowIndex();
+        int rightNeighbourCol = cell.GetColIndex() + 1;
+        Vector2 right = new Vector2(rightNeighbourRow, rightNeighbourCol);
+
+
+        List<GameObject> neighbours = new List<GameObject>();
+        foreach (var aCell in cells)
+        {
+            if (aCell.GetComponent<Cell>().GetRowCol().Equals(upper) || aCell.GetComponent<Cell>().GetRowCol().Equals(bottom) || aCell.GetComponent<Cell>().GetRowCol().Equals(left) || aCell.GetComponent<Cell>().GetRowCol().Equals(right))
+            {
+                neighbours.Add(aCell);
+            }
+        }
+
+        cell.SetNeighbourCells(neighbours);
+
+    }
+
+
+    void foo()
+    {
+        foreach (var cell in cells)
+            FindNeighbourCells(cell.GetComponent<Cell>());
+        
+        for (int i = 0; i < 16; i++)
+        {
+            foreach (var n in cells[i].GetComponent<Cell>().GetNeighbourCells())
+                Debug.Log("Cell: " + cells[i].GetComponent<Cell>().GetRowCol() + "              Neighbours: " + n.GetComponent<Cell>().GetRowCol());
+            Debug.Log("###########################");
+
+        }
+        
+    }
+
 }
