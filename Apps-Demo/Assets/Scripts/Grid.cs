@@ -67,7 +67,8 @@ public class Grid : MonoBehaviour
                         box.GetComponent<Box>().SetLetter(myJSONInventer.GetBoard().letters[k].letter);
                         box.GetComponent<Box>().SetLetterAsset(GetAssetOfLetter(myJSONInventer.GetBoard().letters[k].letter));
                         box.GetComponent<RectTransform>().sizeDelta = cell.GetComponent<RectTransform>().sizeDelta;
-                        box.transform.SetParent(cell.transform);
+                        //box.transform.SetParent(cell.transform);
+                        cell.GetComponent<Cell>().SetChildBox(box);
                         
                         cells.Add(cell);
                         boxes.Add(box);

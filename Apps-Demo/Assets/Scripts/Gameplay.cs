@@ -9,12 +9,11 @@ using UnityEngine.UI;
 public class Gameplay : MonoBehaviour
 {
     public static JSONInventer myJSONInventer;
-    
-    List<GameObject> selectedBoxes = new List<GameObject>();
-    [SerializeField] List<GameObject> allBoxes = new List<GameObject>();
-    List<GameObject> cells = new List<GameObject>();
-    [SerializeField] List<string> words = new List<string>();
 
+    List<GameObject> selectedBoxes = new List<GameObject>();
+    List<GameObject> allBoxes = new List<GameObject>();
+    List<GameObject> cells = new List<GameObject>();
+    List<string> words = new List<string>();
 
     private void Start()
     {
@@ -40,7 +39,7 @@ public class Gameplay : MonoBehaviour
     }
 
     private void DropBoxesIfPossible()
-    {
+    { 
         for(int i = 0; i < allBoxes.Count; i++)
         {
             GameObject candidateToDrop = allBoxes[i];
@@ -50,12 +49,14 @@ public class Gameplay : MonoBehaviour
 
                 for (int j = candidateToDrop.transform.parent.GetComponent<Cell>().GetRowIndex(); j >= 0; j--)
                 {
-                    Debug.Log("j: " + j + "col: " + candidateToDrop.transform.parent.GetComponent<Cell>().GetColIndex());
-                    Debug.Log(Grid.GetCellAt(j, colIndex).transform.GetChild(0).name);
-                    if (!(Grid.GetCellAt(j, colIndex).transform.GetChild(0).name.Equals("Box 1(Clone)")))
+                    if (Grid.GetCellAt(j, colIndex).GetComponent<Cell>().GetChildBox() == null)
                     {
-                        Debug.Log("HAHHAHA");
-                        candidateToDrop.transform.SetParent(cells[j].transform);
+                        candidateToDrop.transform.parent.GetComponent<Cell>().SetChildBox(null);
+                        candidateToDrop.transform.SetParent(Grid.GetCellAt(j, colIndex).transform);
+                        candidateToDrop.GetComponent<RectTransform>().localPosition = new Vector3(0,0,0);
+                        Grid.GetCellAt(j, colIndex).GetComponent<Cell>().SetChildBox(candidateToDrop);
+                        allBoxes[allBoxes.IndexOf(candidateToDrop)] = null;
+                        allBoxes[cells.IndexOf(Grid.GetCellAt(j, colIndex))] = candidateToDrop;
                     }
                 }
             }
@@ -72,14 +73,14 @@ public class Gameplay : MonoBehaviour
 
         if (selectedBoxes.Count == 0 && nextSelected != null)
         {
-            nextSelected.GetComponent<Image>().color = Color.red;
+            nextSelected.GetComponent<Image>().color = Color.green;
             selectedBoxes.Add(nextSelected);
         }
         else if(selectedBoxes.Count > 0 && nextSelected != null)
         {
             if ((selectedBoxes[selectedBoxes.Count - 1].transform.parent.GetComponent<Cell>().GetNeighbourCells().Contains(nextSelected.transform.parent.gameObject)) && !selectedBoxes.Contains(nextSelected))
             {
-                nextSelected.GetComponent<Image>().color = Color.red;
+                nextSelected.GetComponent<Image>().color = Color.green;
                 selectedBoxes.Add(nextSelected);
             }
         }
@@ -91,8 +92,12 @@ public class Gameplay : MonoBehaviour
         selectedBoxes.Clear();
         for (int i = 0; i < allBoxes.Count; i++)
         {
-            allBoxes[i].GetComponent<Box>().SetTouched(false);
-            allBoxes[i].GetComponent<Image>().color = Color.white;
+            if(allBoxes[i] != null)
+            {
+                allBoxes[i].GetComponent<Box>().SetTouched(false);
+                allBoxes[i].GetComponent<Image>().color = Color.white;
+            }
+            
         }
     }
 
@@ -108,10 +113,12 @@ public class Gameplay : MonoBehaviour
         {
             for(int i = 0; i < selectedBoxes.Count; i++)
             {
+                selectedBoxes[i].transform.parent.GetComponent<Cell>().SetChildBox(null);
+                Destroy(allBoxes[allBoxes.IndexOf(selectedBoxes[i])]);
                 allBoxes[allBoxes.IndexOf(selectedBoxes[i])] = null;
-                Destroy(selectedBoxes[i]);
             }
             words.Remove(word);
+            selectedBoxes.Clear();
             DropBoxesIfPossible();
         }
     }

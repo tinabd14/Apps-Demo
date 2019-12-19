@@ -17,6 +17,7 @@ public class Cell : MonoBehaviour
 
     JSONInventer myJSONInventer;
     GameObject grid;
+    [SerializeField] GameObject childBox;
     [SerializeField] List<GameObject> neighbours = new List<GameObject>();
 
 
@@ -97,5 +98,16 @@ public class Cell : MonoBehaviour
     {
         this.neighbours.Clear();
         this.neighbours = neighbours;
+    }
+
+    public GameObject GetChildBox()
+    {
+        return childBox;
+    }
+
+
+    public void SetChildBox(GameObject child)
+    {
+        childBox = child;
     }
 }

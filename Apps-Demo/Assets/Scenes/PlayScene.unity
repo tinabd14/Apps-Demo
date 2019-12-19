@@ -855,7 +855,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 35f2eafb58b245f419d0cedb7984f2bd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  selectedBoxes: []
+  allBoxes: []
+  words: []
 --- !u!4 &2125910677
 Transform:
   m_ObjectHideFlags: 0
