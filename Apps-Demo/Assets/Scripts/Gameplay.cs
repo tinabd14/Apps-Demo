@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -14,8 +13,8 @@ public class Gameplay : MonoBehaviour
     List<string> words = new List<string>();
 
     private bool won;
-    [SerializeField] Text topicText;
-    [SerializeField] Text selectionText;
+    [SerializeField] Text topicText = null;
+    [SerializeField] Text selectionText = null;
 
     //[SerializeField] GameObject wonPanel;
     private void Start()

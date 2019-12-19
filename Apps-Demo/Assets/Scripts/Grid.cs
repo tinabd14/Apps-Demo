@@ -6,8 +6,8 @@ public class Grid : MonoBehaviour
     private int rowCount;
     private int colCount;
 
-    [SerializeField] GameObject cellPrefab;
-    [SerializeField] GameObject boxPrefab;
+    [SerializeField] GameObject cellPrefab = null;
+    [SerializeField] GameObject boxPrefab = null;
     private List<Sprite> letterAssets;
 
     JSONInventer myJSONInventer;
