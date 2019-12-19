@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class Gameplay : MonoBehaviour
@@ -15,17 +16,22 @@ public class Gameplay : MonoBehaviour
     private bool won;
     [SerializeField] Text topicText = null;
     [SerializeField] Text selectionText = null;
+    [SerializeField] GameObject endGamePanel = null;
+    [SerializeField] Text playerCoinText = null;
+    [SerializeField] Text awardText = null;
 
-    //[SerializeField] GameObject wonPanel;
+    double playerCoin;
+
     private void Start()
     {
         myJSONInventer = new JSONInventer();
         allBoxes = Grid.boxes;
         cells = Grid.cells;
         won = false;
+        playerCoin = 0;
         topicText.text = myJSONInventer.GetTopic();
+        endGamePanel.SetActive(false);
 
-        //wonPanel.SetActive(false);
         foreach (var word in myJSONInventer.GetWords())
             words.Add(word as string);
     }
@@ -43,7 +49,7 @@ public class Gameplay : MonoBehaviour
         if(words.Count == 0)
         {
             won = true;
-            //wonPanel.SetActive(true);
+            endGamePanel.SetActive(true);
         }
     }
 
@@ -142,6 +148,15 @@ public class Gameplay : MonoBehaviour
         {
             Deselect();
         }
+    }
+
+
+    public void GiveAward()
+    {
+        double awardCoin = double.Parse(awardText.text);
+        playerCoin += awardCoin;
+        playerCoinText.text = playerCoin.ToString();
+        SceneManager.LoadScene(0);
     }
 
 }
