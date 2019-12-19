@@ -17,7 +17,7 @@ public class Cell : MonoBehaviour
 
     JSONInventer myJSONInventer;
     GameObject grid;
-    List<GameObject> neighbours = new List<GameObject>();
+    [SerializeField] List<GameObject> neighbours = new List<GameObject>();
 
 
     // Start is called before the first frame update

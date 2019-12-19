@@ -22,8 +22,8 @@ public class Grid : MonoBehaviour
         InitializeJSONInventer();
         InitializeGridProperties();
         FillWithCells();
-
-        foo();
+        foreach (var cell in cells)
+            FindNeighbourCells(cell.GetComponent<Cell>());
     }
 
     private void InitializeGridProperties()
@@ -62,10 +62,10 @@ public class Grid : MonoBehaviour
                         GameObject cell = Instantiate(cellPrefab,transform);
                         cell.GetComponent<Cell>().Initialize();
                         cell.GetComponent<Cell>().SetPosition(i, j);
-                        //cell.transform.SetParent(GameObject.Find("Grid").transform);
                         
                         GameObject box = Instantiate(boxPrefab, cell.transform);
-                        box.GetComponent<Box>().SetLetter(GetAssetOfLetter(myJSONInventer.GetBoard().letters[k].letter));
+                        box.GetComponent<Box>().SetLetter(myJSONInventer.GetBoard().letters[k].letter);
+                        box.GetComponent<Box>().SetLetterAsset(GetAssetOfLetter(myJSONInventer.GetBoard().letters[k].letter));
                         box.GetComponent<RectTransform>().sizeDelta = cell.GetComponent<RectTransform>().sizeDelta;
                         box.transform.SetParent(cell.transform);
                         
@@ -77,6 +77,16 @@ public class Grid : MonoBehaviour
         }
     }
 
+    public static GameObject GetCellAt(int row, int col)
+    {
+        Vector2 tmp = new Vector2(row, col);
+        for(int i = 0; i < cells.Count; i++)
+        {
+            if (cells[i].GetComponent<Cell>().GetRowCol().Equals(tmp))
+                return cells[i];
+        }
+        return null;
+    }
 
     private void GetAllLettersFromAssets()
     {
@@ -143,21 +153,4 @@ public class Grid : MonoBehaviour
         cell.SetNeighbourCells(neighbours);
 
     }
-
-
-    void foo()
-    {
-        foreach (var cell in cells)
-            FindNeighbourCells(cell.GetComponent<Cell>());
-        
-        for (int i = 0; i < 16; i++)
-        {
-            foreach (var n in cells[i].GetComponent<Cell>().GetNeighbourCells())
-                Debug.Log("Cell: " + cells[i].GetComponent<Cell>().GetRowCol() + "              Neighbours: " + n.GetComponent<Cell>().GetRowCol());
-            Debug.Log("###########################");
-
-        }
-        
-    }
-
 }

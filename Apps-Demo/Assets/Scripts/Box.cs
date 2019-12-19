@@ -7,15 +7,23 @@ using UnityEngine.UI;
 public class Box : MonoBehaviour
 {
     bool touched;
-    public void SetLetter(Sprite letterAsset)
+    string letter;
+    public void SetLetterAsset(Sprite letterAsset)
     {
         gameObject.transform.GetChild(0).GetComponent<Image>().sprite = letterAsset;
     }
 
+    public string GetLetter()
+    {
+        return letter;
+    }
+    public void SetLetter(string letter)
+    {
+        this.letter = letter;
+    }
     public void Touched()
     {
         touched = true;
-        Debug.Log("AAAADADDDAD");
     }
 
     public bool GetTouched()
@@ -27,4 +35,6 @@ public class Box : MonoBehaviour
     {
         touched = touch;
     }
+
+
 }
