@@ -13,7 +13,9 @@ public class JSONInventer
     Puzzle puzzleJSON;
     public JSONInventer()
     {
-        jsonString = File.ReadAllText(Application.dataPath + "/Resources/Puzzle.json");
+        //jsonString = File.ReadAllText(Application.dataPath + "/Resources/Puzzle.json") as TextAsset;
+        TextAsset txtAsset = (TextAsset)Resources.Load("Puzzle", typeof(TextAsset));
+        jsonString = txtAsset.text;
         puzzleJSON = JsonUtility.FromJson<Puzzle>(jsonString);
         InitializeVariablesFromJSON(puzzleJSON);
     }
