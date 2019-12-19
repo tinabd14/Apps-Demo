@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 public class Grid : MonoBehaviour
@@ -67,7 +65,6 @@ public class Grid : MonoBehaviour
                         box.GetComponent<Box>().SetLetter(myJSONInventer.GetBoard().letters[k].letter);
                         box.GetComponent<Box>().SetLetterAsset(GetAssetOfLetter(myJSONInventer.GetBoard().letters[k].letter));
                         box.GetComponent<RectTransform>().sizeDelta = cell.GetComponent<RectTransform>().sizeDelta;
-                        //box.transform.SetParent(cell.transform);
                         cell.GetComponent<Cell>().SetChildBox(box);
                         
                         cells.Add(cell);

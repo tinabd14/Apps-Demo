@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -15,18 +13,29 @@ public class Gameplay : MonoBehaviour
     List<GameObject> cells = new List<GameObject>();
     List<string> words = new List<string>();
 
+    private bool won;
+    [SerializeField] Text topicText;
+    [SerializeField] Text selectionText;
+
+    //[SerializeField] GameObject wonPanel;
     private void Start()
     {
         myJSONInventer = new JSONInventer();
         allBoxes = Grid.boxes;
         cells = Grid.cells;
+        won = false;
+        topicText.text = myJSONInventer.GetTopic();
+
+        //wonPanel.SetActive(false);
         foreach (var word in myJSONInventer.GetWords())
             words.Add(word as string);
     }
 
+
     private void Update()
     {
-        CheckIfWon();
+        if(!won)
+            CheckIfWon();
         SelectBoxes();
     }
 
@@ -34,7 +43,8 @@ public class Gameplay : MonoBehaviour
     {
         if(words.Count == 0)
         {
-            Debug.Log("WON!");
+            won = true;
+            //wonPanel.SetActive(true);
         }
     }
 
@@ -47,20 +57,25 @@ public class Gameplay : MonoBehaviour
             {
                 int colIndex = candidateToDrop.transform.parent.GetComponent<Cell>().GetColIndex();
 
-                for (int j = candidateToDrop.transform.parent.GetComponent<Cell>().GetRowIndex(); j >= 0; j--)
+                for (int rowIndex = candidateToDrop.transform.parent.GetComponent<Cell>().GetRowIndex(); rowIndex >= 0; rowIndex--)
                 {
-                    if (Grid.GetCellAt(j, colIndex).GetComponent<Cell>().GetChildBox() == null)
+                    if (Grid.GetCellAt(rowIndex, colIndex).GetComponent<Cell>().GetChildBox() == null)
                     {
-                        candidateToDrop.transform.parent.GetComponent<Cell>().SetChildBox(null);
-                        candidateToDrop.transform.SetParent(Grid.GetCellAt(j, colIndex).transform);
-                        candidateToDrop.GetComponent<RectTransform>().localPosition = new Vector3(0,0,0);
-                        Grid.GetCellAt(j, colIndex).GetComponent<Cell>().SetChildBox(candidateToDrop);
-                        allBoxes[allBoxes.IndexOf(candidateToDrop)] = null;
-                        allBoxes[cells.IndexOf(Grid.GetCellAt(j, colIndex))] = candidateToDrop;
+                        RepositionBox(candidateToDrop, rowIndex, colIndex);
                     }
                 }
             }
         }
+    }
+
+    private void RepositionBox(GameObject candidateToDrop, int rowIndex, int colIndex)
+    {
+        candidateToDrop.transform.parent.GetComponent<Cell>().SetChildBox(null);
+        candidateToDrop.transform.SetParent(Grid.GetCellAt(rowIndex, colIndex).transform);
+        candidateToDrop.GetComponent<RectTransform>().localPosition = new Vector3(0, 0, 0);
+        Grid.GetCellAt(rowIndex, colIndex).GetComponent<Cell>().SetChildBox(candidateToDrop);
+        allBoxes[allBoxes.IndexOf(candidateToDrop)] = null;
+        allBoxes[cells.IndexOf(Grid.GetCellAt(rowIndex, colIndex))] = candidateToDrop;
     }
 
     private void SelectBoxes()
@@ -74,6 +89,7 @@ public class Gameplay : MonoBehaviour
         if (selectedBoxes.Count == 0 && nextSelected != null)
         {
             nextSelected.GetComponent<Image>().color = Color.green;
+            selectionText.text = selectionText.text + nextSelected.GetComponent<Box>().GetLetter();
             selectedBoxes.Add(nextSelected);
         }
         else if(selectedBoxes.Count > 0 && nextSelected != null)
@@ -81,6 +97,7 @@ public class Gameplay : MonoBehaviour
             if ((selectedBoxes[selectedBoxes.Count - 1].transform.parent.GetComponent<Cell>().GetNeighbourCells().Contains(nextSelected.transform.parent.gameObject)) && !selectedBoxes.Contains(nextSelected))
             {
                 nextSelected.GetComponent<Image>().color = Color.green;
+                selectionText.text = selectionText.text + nextSelected.GetComponent<Box>().GetLetter();
                 selectedBoxes.Add(nextSelected);
             }
         }
@@ -90,6 +107,7 @@ public class Gameplay : MonoBehaviour
     public void Deselect()
     {
         selectedBoxes.Clear();
+        selectionText.text = "";
         for (int i = 0; i < allBoxes.Count; i++)
         {
             if(allBoxes[i] != null)
@@ -97,7 +115,6 @@ public class Gameplay : MonoBehaviour
                 allBoxes[i].GetComponent<Box>().SetTouched(false);
                 allBoxes[i].GetComponent<Image>().color = Color.white;
             }
-            
         }
     }
 
@@ -106,7 +123,7 @@ public class Gameplay : MonoBehaviour
         string word = "";
         for(int i = 0; i < selectedBoxes.Count; i++)
         {
-            word = word + selectedBoxes[i].GetComponent<Box>().GetLetter();
+            word += selectedBoxes[i].GetComponent<Box>().GetLetter();
         }
 
         if(words.Contains(word))
@@ -119,7 +136,12 @@ public class Gameplay : MonoBehaviour
             }
             words.Remove(word);
             selectedBoxes.Clear();
+            selectionText.text = "";
             DropBoxesIfPossible();
+        }
+        else
+        {
+            Deselect();
         }
     }
 

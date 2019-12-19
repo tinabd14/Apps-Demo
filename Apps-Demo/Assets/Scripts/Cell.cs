@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 public class Cell : MonoBehaviour
@@ -14,11 +12,10 @@ public class Cell : MonoBehaviour
     int colIndex;
     Vector2 rowcol;
 
-
     JSONInventer myJSONInventer;
     GameObject grid;
-    [SerializeField] GameObject childBox;
-    [SerializeField] List<GameObject> neighbours = new List<GameObject>();
+    GameObject childBox;
+    List<GameObject> neighbours = new List<GameObject>();
 
 
     // Start is called before the first frame update
